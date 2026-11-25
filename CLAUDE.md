@@ -29,7 +29,7 @@ Needs Node and Python 3 (`scripts/build.sh` zips with Python and the tests read 
 
 ## Constraints the tests enforce
 
-`tests/theme.test.js` (node:test, no dependencies):
+`tests/theme.test.js` (node:test; reads packages with Python):
 - `theme.css` must open with the author header (copyright line with `https://jerryreinitz.com`, MIT, and the four links). Keep it first when editing.
 - Every `var(--dyk-*)` must be defined; no `url()` except `data:`.
 - No "Outlook", "Microsoft" or "Office 365" in the theme or manifest. The look is inspired by an office mail app but never branded; keep product names out of all public text.
