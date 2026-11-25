@@ -32,16 +32,19 @@
   /* Text */
   --dyk-ink:          light-dark(#242424, #FFFFFF);
   --dyk-ink-2:        light-dark(#616161, #ADADAD);  /* dates, previews, counts */
-  --dyk-ink-3:        light-dark(#707070, #8A8A8A);  /* placeholders */
+  --dyk-ink-3:        light-dark(#707070, #9A9A9A);  /* placeholders */
 
   /* The one accent */
   --dyk-accent:       light-dark(#0F6CBD, #62ABF5);  /* links, unread subjects, selection edge */
   --dyk-accent-fill:  light-dark(#0F6CBD, #115EA3);  /* filled buttons */
   --dyk-accent-hover: light-dark(#115EA3, #0F6CBD);
-  --dyk-accent-press: light-dark(#0C3B5E, #0C3B5E);
+  --dyk-accent-press: #0C3B5E;
   --dyk-on-accent:    #FFFFFF;
   --dyk-selected:     light-dark(#EBF3FC, #183450);  /* selected message or folder */
   --dyk-selected-2:   light-dark(#CFE4FA, #0E4775);  /* selected and focused */
+
+  /* The manifest also uses three icon/button greys not needed here:
+     #424242 (icons), #E6E6E6 and #D6D6D6 (toolbar button hover and press). */
 
   /* Shape and type */
   --dyk-radius:       4px;
@@ -205,15 +208,6 @@ body {
 }
 #threadTree:focus-within .card-layout.selected .card-container {
   background-color: var(--dyk-selected-2) !important;
-}
-
-/* Unread: bold sender, accent subject. */
-#threadTree tr[data-properties~="unread"] .sender,
-#threadTree tr[data-properties~="unread"] .subject {
-  font-weight: 600;
-}
-#threadTree tr[data-properties~="unread"] .subject {
-  color: var(--dyk-accent);
 }
 
 /* Reading pane header sits on the pane color, with one divider under it. */

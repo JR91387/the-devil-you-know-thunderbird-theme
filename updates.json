@@ -5,7 +5,20 @@
         {
           "version": "0.1.0",
           "update_link": "https://github.com/JR91387/the-devil-you-know-thunderbird-theme/releases/download/v0.1.0/the-devil-you-know-0.1.0.xpi",
-          "applications": { "gecko": { "strict_min_version": "140.0" } }
+          "applications": {
+            "gecko": {
+              "strict_min_version": "140.0"
+            }
+          }
+        },
+        {
+          "version": "0.1.1",
+          "update_link": "https://github.com/JR91387/the-devil-you-know-thunderbird-theme/releases/download/v0.1.1/the-devil-you-know-0.1.1.xpi",
+          "applications": {
+            "gecko": {
+              "strict_min_version": "140.0"
+            }
+          }
         }
       ]
     }

@@ -25,7 +25,7 @@ Tip: View > Layout > Vertical View gives the familiar three-column layout.
 ## Install
 
 - From addons.thunderbird.net (coming soon).
-- Or download `the-devil-you-know-0.1.0.xpi` from the GitHub Releases page. Then open Thunderbird > Add-ons and Themes, click the gear, and choose Install Add-on From File.
+- Or download `the-devil-you-know-0.1.1.xpi` from the GitHub Releases page. Then open Thunderbird > Add-ons and Themes, click the gear, and choose Install Add-on From File.
 
 The self-hosted build updates itself from `updates.json`.
 
@@ -68,9 +68,9 @@ More detail is in the [wiki](https://github.com/JR91387/the-devil-you-know-thund
 
 ## Build and test
 
-- `npm run build` writes `dist/the-devil-you-know-0.1.0.xpi` and `dist/the-devil-you-know-0.1.0-atn.xpi`.
-- `npm test` runs 9 checks: manifest, author header, package contents, ATN rules, and text contrast of at least 4.5:1.
-- `npm run lint` runs stylelint on the CSS.
+- `npm run build` writes `dist/the-devil-you-know-0.1.1.xpi` and `dist/the-devil-you-know-0.1.1-atn.xpi`.
+- `npm test` runs 12 checks: manifest, author header, package contents, ATN rules, the update feed matching the manifest version, manifest colors matching the stylesheet, and text contrast of at least 4.5:1.
+- `npm install` once, then `npm run lint` runs stylelint on the CSS.
 
 Needs Node and Python 3. Nothing else.
 

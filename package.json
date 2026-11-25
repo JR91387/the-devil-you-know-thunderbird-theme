@@ -1,6 +1,6 @@
 {
   "name": "the-devil-you-know-thunderbird-theme",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Development tooling for The Devil You Know, a Thunderbird theme. The theme itself is in theme/.",
   "license": "MIT",
@@ -8,6 +8,9 @@
   "scripts": {
     "build": "bash scripts/build.sh",
     "test": "bash scripts/build.sh >/dev/null && node --test \"tests/*.test.js\"",
-    "lint": "npx --yes stylelint@17 \"theme/*.css\""
+    "lint": "stylelint \"theme/*.css\""
+  },
+  "devDependencies": {
+    "stylelint": "17.16.0"
   }
 }
