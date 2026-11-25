@@ -1,9 +1,10 @@
 // Checks for The Devil You Know: manifest, stylesheet, packages and contrast.
-// Run with `npm test` (builds first). No dependencies beyond Node.
+// Run with `npm test` (builds first). Needs Node and Python 3, nothing else.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { inflateRawSync } from 'node:zlib';
+import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const manifest = JSON.parse(read('theme/manifest.json'));
@@ -48,25 +49,9 @@ test('no remote URLs or brand names in the theme', () => {
   for (const text of [body, JSON.stringify(manifest)]) assert.doesNotMatch(text, /outlook|microsoft|office 365/i);
 });
 
-// Minimal zip reader: list entries and read one file.
-function unzip(path) {
-  const buf = readFileSync(path);
-  let eocd = buf.length - 22;
-  while (buf.readUInt32LE(eocd) !== 0x06054b50) eocd--;
-  let p = buf.readUInt32LE(eocd + 16);
-  const entries = {};
-  for (let i = 0; i < buf.readUInt16LE(eocd + 10); i++) {
-    const method = buf.readUInt16LE(p + 10);
-    const n = buf.readUInt16LE(p + 28), x = buf.readUInt16LE(p + 30), c = buf.readUInt16LE(p + 32);
-    const name = buf.toString('utf8', p + 46, p + 46 + n);
-    const off = buf.readUInt32LE(p + 42);
-    const start = off + 30 + buf.readUInt16LE(off + 26) + buf.readUInt16LE(off + 28);
-    const data = buf.subarray(start, start + buf.readUInt32LE(p + 20));
-    entries[name] = () => (method === 8 ? inflateRawSync(data) : data).toString('utf8');
-    p += 46 + n + x + c;
-  }
-  return entries;
-}
+// Read a package with Python's zipfile (the build already needs Python).
+const zipNames = (url) => execFileSync('python3', ['-I', '-c', 'import sys,zipfile; print("\\n".join(zipfile.ZipFile(sys.argv[1]).namelist()))', fileURLToPath(url)], { encoding: 'utf8' }).trim().split('\n');
+const zipRead = (url, name) => execFileSync('python3', ['-I', '-c', 'import sys,zipfile; sys.stdout.write(zipfile.ZipFile(sys.argv[1]).read(sys.argv[2]).decode())', fileURLToPath(url), name], { encoding: 'utf8' });
 
 test('both packages exist with the expected files', () => {
   const dist = new URL('../dist/', import.meta.url);
@@ -74,19 +59,27 @@ test('both packages exist with the expected files', () => {
   const names = readdirSync(dist);
   for (const f of [`the-devil-you-know-${v}.xpi`, `the-devil-you-know-${v}-atn.xpi`]) {
     assert.ok(names.includes(f), f);
-    const z = unzip(new URL(f, dist));
-    assert.deepEqual(Object.keys(z).sort(), ['AUTHOR.md', 'LICENSE', 'icon.svg', 'manifest.json', 'theme.css']);
+    assert.deepEqual(zipNames(new URL(f, dist)).sort(), ['AUTHOR.md', 'LICENSE', 'icon.svg', 'manifest.json', 'theme.css']);
   }
 });
 
 test('ATN package has no update_url and has a max version; self-hosted keeps update_url', () => {
   const dist = new URL('../dist/', import.meta.url);
   const v = manifest.version;
-  const atn = JSON.parse(unzip(new URL(`the-devil-you-know-${v}-atn.xpi`, dist))['manifest.json']()).browser_specific_settings.gecko;
-  const own = JSON.parse(unzip(new URL(`the-devil-you-know-${v}.xpi`, dist))['manifest.json']()).browser_specific_settings.gecko;
+  const atn = JSON.parse(zipRead(new URL(`the-devil-you-know-${v}-atn.xpi`, dist), 'manifest.json')).browser_specific_settings.gecko;
+  const own = JSON.parse(zipRead(new URL(`the-devil-you-know-${v}.xpi`, dist), 'manifest.json')).browser_specific_settings.gecko;
   assert.equal(atn.update_url, undefined);
   assert.match(atn.strict_max_version, /^\d+\.\*$/);
   assert.match(own.update_url, /^https:\/\/raw\.githubusercontent\.com\/JR91387\/the-devil-you-know-thunderbird-theme\/main\/updates\.json$/);
+});
+
+test('updates.json offers the manifest version at its release download', () => {
+  const v = manifest.version;
+  const feed = JSON.parse(read('updates.json')).addons[manifest.browser_specific_settings.gecko.id].updates;
+  const entry = feed.find((u) => u.version === v);
+  assert.ok(entry, `updates.json has no entry for ${v}`);
+  assert.ok(entry.update_link.endsWith(`/releases/download/v${v}/the-devil-you-know-${v}.xpi`), entry.update_link);
+  assert.equal(entry.applications.gecko.strict_min_version, manifest.browser_specific_settings.gecko.strict_min_version);
 });
 
 // WCAG contrast of the main text/background pairs, read from the values block.
@@ -107,10 +100,23 @@ for (const mode of ['light', 'dark']) {
   test(`text contrast is at least 4.5:1 (${mode})`, () => {
     const v = values(mode);
     const pairs = [['ink', 'pane'], ['ink-2', 'pane'], ['accent', 'pane'], ['ink', 'selected'], ['ink', 'selected-2'],
-      ['on-accent', 'accent-fill'], ['ink-2', 'pane-alt'], ['accent', 'selected'], ['ink', 'frame']];
+      ['on-accent', 'accent-fill'], ['ink-2', 'pane-alt'], ['accent', 'selected'], ['ink', 'frame'], ['ink-3', 'pane'], ['ink-3', 'pane-alt']];
     for (const [fg, bg] of pairs) {
       const r = contrast(v[`--dyk-${fg}`], v[`--dyk-${bg}`]);
       assert.ok(r >= 4.5, `${fg} on ${bg}: ${r.toFixed(2)}`);
     }
+  });
+}
+
+// Manifest colors that have no --dyk value (icon and toolbar-button greys).
+const MANIFEST_ONLY = new Set(['#424242', '#E6E6E6', '#D6D6D6']);
+
+for (const [mode, colors] of [['light', manifest.theme.colors], ['dark', manifest.dark_theme.colors]]) {
+  test(`manifest colors match theme.css (${mode})`, () => {
+    const v = values(mode);
+    const shared = { frame: 'frame', tab_line: 'accent', toolbar_field_border_focus: 'accent', icons_attention: 'accent', popup: 'pane', sidebar: 'pane-alt' };
+    for (const [key, name] of Object.entries(shared)) assert.equal(colors[key].toUpperCase(), v[`--dyk-${name}`].toUpperCase(), `${key} vs --dyk-${name}`);
+    const palette = new Set(Object.values(v).map((c) => c.toUpperCase()));
+    for (const [key, c] of Object.entries(colors)) assert.ok(palette.has(c.toUpperCase()) || MANIFEST_ONLY.has(c.toUpperCase()), `${key} ${c} is not in theme.css or MANIFEST_ONLY`);
   });
 }
