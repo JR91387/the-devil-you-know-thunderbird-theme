@@ -1,5 +1,5 @@
-dist/
-node_modules/
+*.xpi
 .DS_Store
 Thumbs.db
-*.xpi
+dist/
+node_modules/
