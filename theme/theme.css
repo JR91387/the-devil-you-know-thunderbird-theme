@@ -1,0 +1,239 @@
+/*
+ * The Devil You Know — a theme for Thunderbird and Betterbird
+ * Copyright (c) 2026 Jerry Reinitz (https://jerryreinitz.com). MIT License.
+ *
+ * Jerry Reinitz works at the intersection of healthcare data, clinical
+ * operations and technology: healthcare intelligence, LLM and AI
+ * orchestration, and software engineering.
+ *
+ * Website:            https://jerryreinitz.com
+ * Reinitz Industries: https://reinitzindustries.com
+ * GitHub:             https://github.com/JR91387
+ * LinkedIn:           https://www.linkedin.com/in/jerryreinitz/
+ */
+
+/* ==========================================================================
+ * 1. Design values
+ * Every color, size and font the theme uses is defined here and nowhere else.
+ * light-dark() picks the first value in light mode and the second in dark mode;
+ * Thunderbird switches with the system setting (manifest "dark_theme").
+ * Anything this file doesn't set stays at Thunderbird's default.
+ * ========================================================================== */
+:root {
+  /* Surfaces */
+  --dyk-frame:        light-dark(#F0F0F0, #1F1F1F);  /* window frame, tab strip, spaces bar */
+  --dyk-pane:         light-dark(#FFFFFF, #292929);  /* message list, reading pane */
+  --dyk-pane-alt:     light-dark(#FAFAFA, #242424);  /* folder pane */
+  --dyk-hover:        light-dark(#F5F5F5, #333333);
+  --dyk-pressed:      light-dark(#E0E0E0, #3D3D3D);
+  --dyk-border:       light-dark(#E0E0E0, #3D3D3D);
+  --dyk-border-strong:light-dark(#D1D1D1, #525252);
+
+  /* Text */
+  --dyk-ink:          light-dark(#242424, #FFFFFF);
+  --dyk-ink-2:        light-dark(#616161, #ADADAD);  /* dates, previews, counts */
+  --dyk-ink-3:        light-dark(#707070, #8A8A8A);  /* placeholders */
+
+  /* The one accent */
+  --dyk-accent:       light-dark(#0F6CBD, #62ABF5);  /* links, unread subjects, selection edge */
+  --dyk-accent-fill:  light-dark(#0F6CBD, #115EA3);  /* filled buttons */
+  --dyk-accent-hover: light-dark(#115EA3, #0F6CBD);
+  --dyk-accent-press: light-dark(#0C3B5E, #0C3B5E);
+  --dyk-on-accent:    #FFFFFF;
+  --dyk-selected:     light-dark(#EBF3FC, #183450);  /* selected message or folder */
+  --dyk-selected-2:   light-dark(#CFE4FA, #0E4775);  /* selected and focused */
+
+  /* Shape and type */
+  --dyk-radius:       4px;
+  --dyk-edge:         3px;   /* the blue bar on the selected message */
+  --dyk-font:         "Segoe UI Variable Text", "Segoe UI", Selawik, system-ui, -apple-system, sans-serif;
+
+  /* ========================================================================
+   * 2. Thunderbird's own variables, pointed at the values above.
+   * Using Thunderbird's variables (rather than selectors) is what keeps
+   * the theme working when Thunderbird changes its markup.
+   * ======================================================================== */
+  --layout-background-0: var(--dyk-pane);
+  --layout-background-1: var(--dyk-pane-alt);
+  --layout-background-2: var(--dyk-hover);
+  --layout-background-3: var(--dyk-pressed);
+  --layout-background-4: var(--dyk-frame);
+  --layout-color-0: var(--dyk-ink);
+  --layout-color-1: var(--dyk-ink);
+  --layout-color-2: var(--dyk-ink-2);
+  --layout-color-3: var(--dyk-ink-3);
+  --layout-border-0: var(--dyk-border);
+  --layout-border-1: var(--dyk-border);
+  --layout-border-2: var(--dyk-border-strong);
+  --color-accent-primary: var(--dyk-accent-fill);
+  --color-accent-primary-hover: var(--dyk-accent-hover);
+
+  /* Toolbars, tabs, search */
+  --toolbar-background-color: var(--dyk-frame);
+  --toolbar-text-color: var(--dyk-ink);
+  --toolbar-button-hover-background-color: var(--dyk-hover);
+  --tabs-toolbar-background-color: var(--dyk-frame);
+  --tabline-color: var(--dyk-accent);
+  --search-bar-background: var(--dyk-pane);
+  --search-bar-focus-background: var(--dyk-pane);
+  --search-bar-color: var(--dyk-ink);
+
+  /* Folder pane */
+  --sidebar-background: var(--dyk-pane-alt);
+  --sidebar-background-color: var(--dyk-pane-alt);
+  --sidebar-text-color: var(--dyk-ink);
+  --sidebar-border-color: var(--dyk-border);
+  --folderpane-unread-count-background: transparent;
+  --folderpane-unread-count-text: var(--dyk-accent);
+  --folderpane-unread-new-count-background: transparent;
+  --folderpane-total-count-background: transparent;
+  --folderpane-total-count-text: var(--dyk-ink-2);
+  --folder-color-folder: var(--dyk-ink-2);
+  --folder-color-inbox: var(--dyk-ink-2);
+  --folder-color-sent: var(--dyk-ink-2);
+  --folder-color-draft: var(--dyk-ink-2);
+  --folder-color-archive: var(--dyk-ink-2);
+  --folder-color-trash: var(--dyk-ink-2);
+  --folder-color-spam: var(--dyk-ink-2);
+  --folder-color-template: var(--dyk-ink-2);
+  --folder-color-outbox: var(--dyk-ink-2);
+
+  /* Message list: rows and cards */
+  --tree-view-bg: var(--dyk-pane);
+  --tree-view-color: var(--dyk-ink);
+  --tree-view-header-hover-bg: var(--dyk-hover);
+  --tree-card-background: var(--dyk-pane);
+  --tree-card-border: transparent;
+  --tree-card-background-current: var(--dyk-hover);
+  --tree-card-background-selected: var(--dyk-selected);
+  --tree-card-background-selected-current: var(--dyk-selected-2);
+  --tree-card-background-selected-unfocused: var(--dyk-selected);
+  --tree-card-background-selected-current-unfocused: var(--dyk-selected);
+  --tree-card-border-selected: transparent;
+  --tree-card-border-selected-unfocused: transparent;
+  --treeitem-background-active: var(--dyk-selected-2);
+  --treeitem-text-active: var(--dyk-ink);
+  --selected-item-color: var(--dyk-selected-2);
+  --selected-item-text-color: var(--dyk-ink);
+  --listbox-focused-selected-bg: var(--dyk-selected-2);
+  --list-container-background-selected: var(--dyk-selected);
+  --list-container-background-selected-current: var(--dyk-selected-2);
+  --list-container-border-selected: transparent;
+  --list-container-border-selected-current: transparent;
+  --unread-color: var(--dyk-accent);
+  --new-color: var(--dyk-accent);
+  --new-subject-color: var(--dyk-accent);
+  --thread-line-color: var(--dyk-border-strong);
+
+  /* Buttons, inputs, menus */
+  --button-primary-background-color: var(--dyk-accent-fill);
+  --button-primary-hover-background-color: var(--dyk-accent-hover);
+  --button-primary-active-background-color: var(--dyk-accent-press);
+  --button-primary-text-color: var(--dyk-on-accent);
+  --button-primary-border-color: transparent;
+  --button-background-color-primary: var(--dyk-accent-fill);
+  --button-background-color-primary-hover: var(--dyk-accent-hover);
+  --button-background-color-primary-active: var(--dyk-accent-press);
+  --button-text-color-primary: var(--dyk-on-accent);
+  --button-text-color-primary-hover: var(--dyk-on-accent);
+  --input-background-color: var(--dyk-pane);
+  --input-border-color: var(--dyk-border-strong);
+  --input-text-color: var(--dyk-ink);
+  --panel-background-color: var(--dyk-pane);
+  --panel-text-color: var(--dyk-ink);
+  --panel-border-color: var(--dyk-border);
+  --panel-separator-color: var(--dyk-border);
+  --panel-border-radius: var(--dyk-radius);
+
+  /* Spaces bar (the column of app icons on the far left) */
+  --spaces-button-active-bg-color: var(--dyk-selected-2);
+  --spaces-button-active-text-color: var(--dyk-accent);
+}
+
+/* ==========================================================================
+ * 3. Targeted rules, only where no Thunderbird variable reaches.
+ * Each rule is safe to lose: if Thunderbird renames the element, that part
+ * simply falls back to the default look.
+ * ========================================================================== */
+
+/* Type: one font family across the window. */
+:root,
+body {
+  font-family: var(--dyk-font);
+}
+
+/* "New Message": the single filled accent button, square-ish corners. */
+#folderPaneWriteMessage {
+  background-color: var(--dyk-accent-fill) !important;
+  color: var(--dyk-on-accent) !important;
+  border-color: transparent !important;
+  border-radius: var(--dyk-radius) !important;
+}
+#folderPaneWriteMessage:hover {
+  background-color: var(--dyk-accent-hover) !important;
+}
+
+/* Folder pane: selected folder gets the pale blue band. */
+#folderTree li.selected > .container {
+  background-color: var(--dyk-selected) !important;
+  color: var(--dyk-ink) !important;
+  border-color: transparent !important;
+  border-radius: var(--dyk-radius);
+}
+#folderTree:focus-within li.selected > .container {
+  background-color: var(--dyk-selected-2) !important;
+}
+
+/* Message list: thin dividers between cards instead of floating boxes,
+   and a blue bar on the left edge of the selected message. */
+#threadTree .card-layout .card-container {
+  border: 0 !important;
+  border-bottom: 1px solid var(--dyk-border) !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  outline: none !important;
+  background-color: var(--dyk-pane) !important;
+}
+/* Thunderbird 140 sets the card colors on each row state, so the states are
+   set here directly; newer versions also pick them up from section 2. */
+#threadTree .card-layout:is(:hover, .current) .card-container {
+  background-color: var(--dyk-hover) !important;
+}
+#threadTree .card-layout.selected .card-container {
+  background-color: var(--dyk-selected) !important;
+  box-shadow: inset var(--dyk-edge) 0 0 var(--dyk-accent) !important;
+}
+#threadTree:focus-within .card-layout.selected .card-container {
+  background-color: var(--dyk-selected-2) !important;
+}
+
+/* Unread: bold sender, accent subject. */
+#threadTree tr[data-properties~="unread"] .sender,
+#threadTree tr[data-properties~="unread"] .subject {
+  font-weight: 600;
+}
+#threadTree tr[data-properties~="unread"] .subject {
+  color: var(--dyk-accent);
+}
+
+/* Reading pane header sits on the pane color, with one divider under it. */
+#messageHeader {
+  background-color: var(--dyk-pane) !important;
+  border-bottom: 1px solid var(--dyk-border) !important;
+}
+
+/* Header buttons (Reply, Forward…): flat until hovered. */
+.message-header-view-button {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  border-radius: var(--dyk-radius) !important;
+}
+.message-header-view-button:hover {
+  background-color: var(--dyk-hover) !important;
+}
+
+/* Links in the interface use the accent. */
+a,
+.text-link {
+  color: var(--dyk-accent);
+}

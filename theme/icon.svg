@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>The Devil You Know</title>
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="#0F6CBD"/>
+  <path d="M19 19 L15 9 L25 16 Z M45 19 L49 9 L39 16 Z" fill="#FFFFFF"/>
+  <rect x="12" y="20" width="40" height="28" rx="4" fill="#FFFFFF"/>
+  <path d="M14 23 L32 36 L50 23" fill="none" stroke="#0F6CBD" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
