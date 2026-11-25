@@ -1,3 +1,5 @@
+![The Devil You Know: A crisp light look that feels like the office mail app you already know.](assets/banner.png)
+
 # The Devil You Know
 
 A crisp light look that feels like the office mail app you already know.
